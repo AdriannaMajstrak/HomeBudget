@@ -1,0 +1,909 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BudgetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AccountGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="CheckPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="SettlementPeriodId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CheckPointEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CheckPointId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="AccountGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Counter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettlementPeriodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" />
+          <Property Name="AmountCounter" Type="money" Nullable="false" />
+          <Property Name="Rate" Type="money" />
+          <Property Name="TransactionOutgoesId" Type="int" />
+          <Property Name="Equalized" Type="bit" Nullable="false" />
+          <Property Name="TransactionIncomeId" Type="int" />
+          <Property Name="DestinationAccountGroupId" Type="int" />
+          <Property Name="ForecastIncrease" Type="money" />
+          <Property Name="Equalizable" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CounterTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" />
+          <Property Name="Rate" Type="money" />
+          <Property Name="Equalizable" Type="bit" Nullable="false" />
+          <Property Name="DestinationAccountGroupId" Type="int" />
+          <Property Name="ForecastIncrease" Type="money" />
+        </EntityType>
+        <EntityType Name="CyclePayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettlementPeriodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="20" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="TransactionOutgoesId" Type="int" />
+          <Property Name="DestinationAccountGroupId" Type="int" />
+          <Property Name="TransactionIncomeId" Type="int" />
+        </EntityType>
+        <EntityType Name="CyclePaymentTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="15" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="AccountGroupId" Type="int" />
+        </EntityType>
+        <EntityType Name="SettlementPeriod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Amount" Type="money" Nullable="false" />
+          <Property Name="AccountGroupId" Type="int" Nullable="false" />
+          <Property Name="SettlementPeriodId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Account_AccountGroup">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="1" />
+          <End Role="Account" Type="Self.Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Account">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_AccountGroup">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="0..1" />
+          <End Role="CyclePayment" Type="Self.CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_SettlementPeriod">
+          <End Role="SettlementPeriod" Type="Self.SettlementPeriod" Multiplicity="1" />
+          <End Role="CyclePayment" Type="Self.CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_ToTable">
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="0..1" />
+          <End Role="CyclePayment" Type="Self.CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="TransactionOutgoesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillTemplate_AccountGroup">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="0..1" />
+          <End Role="CyclePaymentTemplate" Type="Self.CyclePaymentTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePaymentTemplate">
+              <PropertyRef Name="AccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CheckPoint_SettlementPeriod">
+          <End Role="SettlementPeriod" Type="Self.SettlementPeriod" Multiplicity="1" />
+          <End Role="CheckPoint" Type="Self.CheckPoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckPoint">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CheckPointEntry_CheckPoint">
+          <End Role="CheckPoint" Type="Self.CheckPoint" Multiplicity="1" />
+          <End Role="CheckPointEntry" Type="Self.CheckPointEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CheckPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckPointEntry">
+              <PropertyRef Name="CheckPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_AccountGroup">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="0..1" />
+          <End Role="Counter" Type="Self.Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_SettlementPeriod">
+          <End Role="SettlementPeriod" Type="Self.SettlementPeriod" Multiplicity="1" />
+          <End Role="Counter" Type="Self.Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_Transactions">
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="0..1" />
+          <End Role="Counter" Type="Self.Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="TransactionOutgoesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_Transactions2">
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="0..1" />
+          <End Role="Counter" Type="Self.Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="TransactionIncomeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CounterTemplate_AccountGrop">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="0..1" />
+          <End Role="CounterTemplate" Type="Self.CounterTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CounterTemplate">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CyclePayment_ToTable">
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="0..1" />
+          <End Role="CyclePayment" Type="Self.CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="TransactionIncomeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_AccountGroup">
+          <End Role="AccountGroup" Type="Self.AccountGroup" Multiplicity="1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="AccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_SettlementPeriod">
+          <End Role="SettlementPeriod" Type="Self.SettlementPeriod" Multiplicity="1" />
+          <End Role="Transaction" Type="Self.Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BudgetModelStoreContainer">
+          <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AccountGroup" EntityType="Self.AccountGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckPoint" EntityType="Self.CheckPoint" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CheckPointEntry" EntityType="Self.CheckPointEntry" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Counter" EntityType="Self.Counter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CounterTemplate" EntityType="Self.CounterTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CyclePayment" EntityType="Self.CyclePayment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CyclePaymentTemplate" EntityType="Self.CyclePaymentTemplate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SettlementPeriod" EntityType="Self.SettlementPeriod" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transaction" EntityType="Self.Transaction" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Account_AccountGroup" Association="Self.FK_Account_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="Account" EntitySet="Account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_AccountGroup" Association="Self.FK_Bill_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="CyclePayment" EntitySet="CyclePayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_SettlementPeriod" Association="Self.FK_Bill_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriod" />
+            <End Role="CyclePayment" EntitySet="CyclePayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_ToTable" Association="Self.FK_Bill_ToTable">
+            <End Role="Transaction" EntitySet="Transaction" />
+            <End Role="CyclePayment" EntitySet="CyclePayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillTemplate_AccountGroup" Association="Self.FK_BillTemplate_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="CyclePaymentTemplate" EntitySet="CyclePaymentTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CheckPoint_SettlementPeriod" Association="Self.FK_CheckPoint_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriod" />
+            <End Role="CheckPoint" EntitySet="CheckPoint" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CheckPointEntry_CheckPoint" Association="Self.FK_CheckPointEntry_CheckPoint">
+            <End Role="CheckPoint" EntitySet="CheckPoint" />
+            <End Role="CheckPointEntry" EntitySet="CheckPointEntry" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_AccountGroup" Association="Self.FK_Counter_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="Counter" EntitySet="Counter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_SettlementPeriod" Association="Self.FK_Counter_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriod" />
+            <End Role="Counter" EntitySet="Counter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_Transactions" Association="Self.FK_Counter_Transactions">
+            <End Role="Transaction" EntitySet="Transaction" />
+            <End Role="Counter" EntitySet="Counter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_Transactions2" Association="Self.FK_Counter_Transactions2">
+            <End Role="Transaction" EntitySet="Transaction" />
+            <End Role="Counter" EntitySet="Counter" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CounterTemplate_AccountGrop" Association="Self.FK_CounterTemplate_AccountGrop">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="CounterTemplate" EntitySet="CounterTemplate" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CyclePayment_ToTable" Association="Self.FK_CyclePayment_ToTable">
+            <End Role="Transaction" EntitySet="Transaction" />
+            <End Role="CyclePayment" EntitySet="CyclePayment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_AccountGroup" Association="Self.FK_Transaction_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroup" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_SettlementPeriod" Association="Self.FK_Transaction_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriod" />
+            <End Role="Transaction" EntitySet="Transaction" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BudgetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BudgetEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="BudgetModel.Account" />
+          <EntitySet Name="AccountGroups" EntityType="BudgetModel.AccountGroup" />
+          <EntitySet Name="CheckPoints" EntityType="BudgetModel.CheckPoint" />
+          <EntitySet Name="CheckPointEntries" EntityType="BudgetModel.CheckPointEntry" />
+          <EntitySet Name="Counters" EntityType="BudgetModel.Counter" />
+          <EntitySet Name="CounterTemplates" EntityType="BudgetModel.CounterTemplate" />
+          <EntitySet Name="CyclePayments" EntityType="BudgetModel.CyclePayment" />
+          <EntitySet Name="CyclePaymentTemplates" EntityType="BudgetModel.CyclePaymentTemplate" />
+          <EntitySet Name="SettlementPeriods" EntityType="BudgetModel.SettlementPeriod" />
+          <EntitySet Name="sysdiagrams" EntityType="BudgetModel.sysdiagram" />
+          <EntitySet Name="Transactions" EntityType="BudgetModel.Transaction" />
+          <AssociationSet Name="FK_Account_AccountGroup" Association="BudgetModel.FK_Account_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_AccountGroup" Association="BudgetModel.FK_Bill_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="CyclePayment" EntitySet="CyclePayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BillTemplate_AccountGroup" Association="BudgetModel.FK_BillTemplate_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="CyclePaymentTemplate" EntitySet="CyclePaymentTemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_AccountGroup" Association="BudgetModel.FK_Counter_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="Counter" EntitySet="Counters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CounterTemplate_AccountGrop" Association="BudgetModel.FK_CounterTemplate_AccountGrop">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="CounterTemplate" EntitySet="CounterTemplates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_AccountGroup" Association="BudgetModel.FK_Transaction_AccountGroup">
+            <End Role="AccountGroup" EntitySet="AccountGroups" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CheckPoint_SettlementPeriod" Association="BudgetModel.FK_CheckPoint_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriods" />
+            <End Role="CheckPoint" EntitySet="CheckPoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CheckPointEntry_CheckPoint" Association="BudgetModel.FK_CheckPointEntry_CheckPoint">
+            <End Role="CheckPoint" EntitySet="CheckPoints" />
+            <End Role="CheckPointEntry" EntitySet="CheckPointEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_SettlementPeriod" Association="BudgetModel.FK_Counter_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriods" />
+            <End Role="Counter" EntitySet="Counters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_Transactions" Association="BudgetModel.FK_Counter_Transactions">
+            <End Role="Transaction" EntitySet="Transactions" />
+            <End Role="Counter" EntitySet="Counters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Counter_Transactions2" Association="BudgetModel.FK_Counter_Transactions2">
+            <End Role="Transaction" EntitySet="Transactions" />
+            <End Role="Counter" EntitySet="Counters" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_SettlementPeriod" Association="BudgetModel.FK_Bill_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriods" />
+            <End Role="CyclePayment" EntitySet="CyclePayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Bill_ToTable" Association="BudgetModel.FK_Bill_ToTable">
+            <End Role="Transaction" EntitySet="Transactions" />
+            <End Role="CyclePayment" EntitySet="CyclePayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CyclePayment_ToTable" Association="BudgetModel.FK_CyclePayment_ToTable">
+            <End Role="Transaction" EntitySet="Transactions" />
+            <End Role="CyclePayment" EntitySet="CyclePayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transaction_SettlementPeriod" Association="BudgetModel.FK_Transaction_SettlementPeriod">
+            <End Role="SettlementPeriod" EntitySet="SettlementPeriods" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_Account_AccountGroup" FromRole="Account" ToRole="AccountGroup" />
+        </EntityType>
+        <EntityType Name="AccountGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Accounts" Relationship="BudgetModel.FK_Account_AccountGroup" FromRole="AccountGroup" ToRole="Account" />
+          <NavigationProperty Name="CyclePayments" Relationship="BudgetModel.FK_Bill_AccountGroup" FromRole="AccountGroup" ToRole="CyclePayment" />
+          <NavigationProperty Name="CyclePaymentTemplates" Relationship="BudgetModel.FK_BillTemplate_AccountGroup" FromRole="AccountGroup" ToRole="CyclePaymentTemplate" />
+          <NavigationProperty Name="Counters" Relationship="BudgetModel.FK_Counter_AccountGroup" FromRole="AccountGroup" ToRole="Counter" />
+          <NavigationProperty Name="CounterTemplates" Relationship="BudgetModel.FK_CounterTemplate_AccountGrop" FromRole="AccountGroup" ToRole="CounterTemplate" />
+          <NavigationProperty Name="Transactions" Relationship="BudgetModel.FK_Transaction_AccountGroup" FromRole="AccountGroup" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="CheckPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="SettlementPeriodId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SettlementPeriod" Relationship="BudgetModel.FK_CheckPoint_SettlementPeriod" FromRole="CheckPoint" ToRole="SettlementPeriod" />
+          <NavigationProperty Name="CheckPointEntries" Relationship="BudgetModel.FK_CheckPointEntry_CheckPoint" FromRole="CheckPoint" ToRole="CheckPointEntry" />
+        </EntityType>
+        <EntityType Name="CheckPointEntry">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CheckPointId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="AccountGroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CheckPoint" Relationship="BudgetModel.FK_CheckPointEntry_CheckPoint" FromRole="CheckPointEntry" ToRole="CheckPoint" />
+        </EntityType>
+        <EntityType Name="Counter">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettlementPeriodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AmountCounter" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="Rate" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TransactionOutgoesId" Type="Int32" />
+          <Property Name="Equalized" Type="Boolean" Nullable="false" />
+          <Property Name="TransactionIncomeId" Type="Int32" />
+          <Property Name="DestinationAccountGroupId" Type="Int32" />
+          <Property Name="ForecastIncrease" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Equalizable" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_Counter_AccountGroup" FromRole="Counter" ToRole="AccountGroup" />
+          <NavigationProperty Name="SettlementPeriod" Relationship="BudgetModel.FK_Counter_SettlementPeriod" FromRole="Counter" ToRole="SettlementPeriod" />
+          <NavigationProperty Name="Transaction" Relationship="BudgetModel.FK_Counter_Transactions" FromRole="Counter" ToRole="Transaction" />
+          <NavigationProperty Name="Transaction1" Relationship="BudgetModel.FK_Counter_Transactions2" FromRole="Counter" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="CounterTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Rate" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Equalizable" Type="Boolean" Nullable="false" />
+          <Property Name="DestinationAccountGroupId" Type="Int32" />
+          <Property Name="ForecastIncrease" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_CounterTemplate_AccountGrop" FromRole="CounterTemplate" ToRole="AccountGroup" />
+        </EntityType>
+        <EntityType Name="CyclePayment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettlementPeriodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="TransactionOutgoesId" Type="Int32" />
+          <Property Name="DestinationAccountGroupId" Type="Int32" />
+          <Property Name="TransactionIncomeId" Type="Int32" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_Bill_AccountGroup" FromRole="CyclePayment" ToRole="AccountGroup" />
+          <NavigationProperty Name="SettlementPeriod" Relationship="BudgetModel.FK_Bill_SettlementPeriod" FromRole="CyclePayment" ToRole="SettlementPeriod" />
+          <NavigationProperty Name="Transaction" Relationship="BudgetModel.FK_Bill_ToTable" FromRole="CyclePayment" ToRole="Transaction" />
+          <NavigationProperty Name="Transaction1" Relationship="BudgetModel.FK_CyclePayment_ToTable" FromRole="CyclePayment" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="CyclePaymentTemplate">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="AccountGroupId" Type="Int32" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_BillTemplate_AccountGroup" FromRole="CyclePaymentTemplate" ToRole="AccountGroup" />
+        </EntityType>
+        <EntityType Name="SettlementPeriod">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="CheckPoints" Relationship="BudgetModel.FK_CheckPoint_SettlementPeriod" FromRole="SettlementPeriod" ToRole="CheckPoint" />
+          <NavigationProperty Name="Counters" Relationship="BudgetModel.FK_Counter_SettlementPeriod" FromRole="SettlementPeriod" ToRole="Counter" />
+          <NavigationProperty Name="CyclePayments" Relationship="BudgetModel.FK_Bill_SettlementPeriod" FromRole="SettlementPeriod" ToRole="CyclePayment" />
+          <NavigationProperty Name="Transactions" Relationship="BudgetModel.FK_Transaction_SettlementPeriod" FromRole="SettlementPeriod" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="AccountGroupId" Type="Int32" Nullable="false" />
+          <Property Name="SettlementPeriodId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AccountGroup" Relationship="BudgetModel.FK_Transaction_AccountGroup" FromRole="Transaction" ToRole="AccountGroup" />
+          <NavigationProperty Name="Counters" Relationship="BudgetModel.FK_Counter_Transactions" FromRole="Transaction" ToRole="Counter" />
+          <NavigationProperty Name="Counters1" Relationship="BudgetModel.FK_Counter_Transactions2" FromRole="Transaction" ToRole="Counter" />
+          <NavigationProperty Name="CyclePayments" Relationship="BudgetModel.FK_Bill_ToTable" FromRole="Transaction" ToRole="CyclePayment" />
+          <NavigationProperty Name="CyclePayments1" Relationship="BudgetModel.FK_CyclePayment_ToTable" FromRole="Transaction" ToRole="CyclePayment" />
+          <NavigationProperty Name="SettlementPeriod" Relationship="BudgetModel.FK_Transaction_SettlementPeriod" FromRole="Transaction" ToRole="SettlementPeriod" />
+        </EntityType>
+        <Association Name="FK_Account_AccountGroup">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="1" />
+          <End Type="BudgetModel.Account" Role="Account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Account">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_AccountGroup">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="0..1" />
+          <End Type="BudgetModel.CyclePayment" Role="CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BillTemplate_AccountGroup">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="0..1" />
+          <End Type="BudgetModel.CyclePaymentTemplate" Role="CyclePaymentTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePaymentTemplate">
+              <PropertyRef Name="AccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_AccountGroup">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="0..1" />
+          <End Type="BudgetModel.Counter" Role="Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CounterTemplate_AccountGrop">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="0..1" />
+          <End Type="BudgetModel.CounterTemplate" Role="CounterTemplate" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CounterTemplate">
+              <PropertyRef Name="DestinationAccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_AccountGroup">
+          <End Type="BudgetModel.AccountGroup" Role="AccountGroup" Multiplicity="1" />
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AccountGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="AccountGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CheckPoint_SettlementPeriod">
+          <End Type="BudgetModel.SettlementPeriod" Role="SettlementPeriod" Multiplicity="1" />
+          <End Type="BudgetModel.CheckPoint" Role="CheckPoint" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckPoint">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CheckPointEntry_CheckPoint">
+          <End Type="BudgetModel.CheckPoint" Role="CheckPoint" Multiplicity="1" />
+          <End Type="BudgetModel.CheckPointEntry" Role="CheckPointEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CheckPoint">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CheckPointEntry">
+              <PropertyRef Name="CheckPointId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_SettlementPeriod">
+          <End Type="BudgetModel.SettlementPeriod" Role="SettlementPeriod" Multiplicity="1" />
+          <End Type="BudgetModel.Counter" Role="Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_Transactions">
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="0..1" />
+          <End Type="BudgetModel.Counter" Role="Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="TransactionOutgoesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Counter_Transactions2">
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="0..1" />
+          <End Type="BudgetModel.Counter" Role="Counter" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Counter">
+              <PropertyRef Name="TransactionIncomeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_SettlementPeriod">
+          <End Type="BudgetModel.SettlementPeriod" Role="SettlementPeriod" Multiplicity="1" />
+          <End Type="BudgetModel.CyclePayment" Role="CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Bill_ToTable">
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="0..1" />
+          <End Type="BudgetModel.CyclePayment" Role="CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="TransactionOutgoesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CyclePayment_ToTable">
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="0..1" />
+          <End Type="BudgetModel.CyclePayment" Role="CyclePayment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Transaction">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CyclePayment">
+              <PropertyRef Name="TransactionIncomeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transaction_SettlementPeriod">
+          <End Type="BudgetModel.SettlementPeriod" Role="SettlementPeriod" Multiplicity="1" />
+          <End Type="BudgetModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SettlementPeriod">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="SettlementPeriodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BudgetModelStoreContainer" CdmEntityContainer="BudgetEntities">
+          <EntitySetMapping Name="Accounts">
+            <EntityTypeMapping TypeName="BudgetModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AccountGroups">
+            <EntityTypeMapping TypeName="BudgetModel.AccountGroup">
+              <MappingFragment StoreEntitySet="AccountGroup">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckPoints">
+            <EntityTypeMapping TypeName="BudgetModel.CheckPoint">
+              <MappingFragment StoreEntitySet="CheckPoint">
+                <ScalarProperty Name="SettlementPeriodId" ColumnName="SettlementPeriodId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CheckPointEntries">
+            <EntityTypeMapping TypeName="BudgetModel.CheckPointEntry">
+              <MappingFragment StoreEntitySet="CheckPointEntry">
+                <ScalarProperty Name="AccountGroupId" ColumnName="AccountGroupId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CheckPointId" ColumnName="CheckPointId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Counters">
+            <EntityTypeMapping TypeName="BudgetModel.Counter">
+              <MappingFragment StoreEntitySet="Counter">
+                <ScalarProperty Name="Equalizable" ColumnName="Equalizable" />
+                <ScalarProperty Name="ForecastIncrease" ColumnName="ForecastIncrease" />
+                <ScalarProperty Name="DestinationAccountGroupId" ColumnName="DestinationAccountGroupId" />
+                <ScalarProperty Name="TransactionIncomeId" ColumnName="TransactionIncomeId" />
+                <ScalarProperty Name="Equalized" ColumnName="Equalized" />
+                <ScalarProperty Name="TransactionOutgoesId" ColumnName="TransactionOutgoesId" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="AmountCounter" ColumnName="AmountCounter" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SettlementPeriodId" ColumnName="SettlementPeriodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CounterTemplates">
+            <EntityTypeMapping TypeName="BudgetModel.CounterTemplate">
+              <MappingFragment StoreEntitySet="CounterTemplate">
+                <ScalarProperty Name="ForecastIncrease" ColumnName="ForecastIncrease" />
+                <ScalarProperty Name="DestinationAccountGroupId" ColumnName="DestinationAccountGroupId" />
+                <ScalarProperty Name="Equalizable" ColumnName="Equalizable" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CyclePayments">
+            <EntityTypeMapping TypeName="BudgetModel.CyclePayment">
+              <MappingFragment StoreEntitySet="CyclePayment">
+                <ScalarProperty Name="TransactionIncomeId" ColumnName="TransactionIncomeId" />
+                <ScalarProperty Name="DestinationAccountGroupId" ColumnName="DestinationAccountGroupId" />
+                <ScalarProperty Name="TransactionOutgoesId" ColumnName="TransactionOutgoesId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SettlementPeriodId" ColumnName="SettlementPeriodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CyclePaymentTemplates">
+            <EntityTypeMapping TypeName="BudgetModel.CyclePaymentTemplate">
+              <MappingFragment StoreEntitySet="CyclePaymentTemplate">
+                <ScalarProperty Name="AccountGroupId" ColumnName="AccountGroupId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SettlementPeriods">
+            <EntityTypeMapping TypeName="BudgetModel.SettlementPeriod">
+              <MappingFragment StoreEntitySet="SettlementPeriod">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BudgetModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="BudgetModel.Transaction">
+              <MappingFragment StoreEntitySet="Transaction">
+                <ScalarProperty Name="SettlementPeriodId" ColumnName="SettlementPeriodId" />
+                <ScalarProperty Name="AccountGroupId" ColumnName="AccountGroupId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

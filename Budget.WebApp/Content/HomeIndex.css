@@ -1,0 +1,18 @@
+﻿.redBorder {
+    border-color: red;
+    border-style: double;
+}
+
+.greenBorder {
+    border-color: green;
+    border-style: double;
+}
+
+.test {
+    border: 1px solid black;
+}
+
+.scrollableList {
+    max-height:200px;
+    overflow-y:scroll;
+}

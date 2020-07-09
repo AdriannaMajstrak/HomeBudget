@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6110413E-B8FB-4A65-8D00-B370FB80FD14}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HomeBudget.Service</RootNamespace>
+    <AssemblyName>HomeBudget.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.0.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccountServices.cs" />
+    <Compile Include="CyclePaymentServices.cs" />
+    <Compile Include="CheckPointServices.cs" />
+    <Compile Include="CounterServices.cs" />
+    <Compile Include="Exceptions\HomeBudgetServiceException.cs" />
+    <Compile Include="Facade\IPaymentFacade.cs" />
+    <Compile Include="Facade\PaymentFacade.cs" />
+    <Compile Include="IAccountServices.cs" />
+    <Compile Include="ICyclePaymentServices.cs" />
+    <Compile Include="ICheckPointServices.cs" />
+    <Compile Include="ICounterServices.cs" />
+    <Compile Include="Facade\ISettlementPeriodFacade.cs" />
+    <Compile Include="ISettlementPeriodServices.cs" />
+    <Compile Include="Facade\CheckPointFacade.cs" />
+    <Compile Include="Model\CalculatedCounter.cs" />
+    <Compile Include="Model\CommonTransactions.cs" />
+    <Compile Include="CommonTransactionsServices.cs" />
+    <Compile Include="Facade\ICheckPointFacade.cs" />
+    <Compile Include="Model\CounterCalculator.cs" />
+    <Compile Include="Model\ICalculatedCounter.cs" />
+    <Compile Include="Model\ICommonTransactions.cs" />
+    <Compile Include="ICommonTransactionsServices.cs" />
+    <Compile Include="Model\ICounterCalculator.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Facade\SettlementPeriodFacade.cs" />
+    <Compile Include="SettlementPeriodServices.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HomeBudget.DataAccess\HomeBudget.DataAccess.csproj">
+      <Project>{ba8b76cf-e350-440b-8580-a27cc8f59cce}</Project>
+      <Name>HomeBudget.DataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

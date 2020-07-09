@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="HomeBudget.Client.View.Controls.Tile"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:HomeBudget.Client.View.Controls"
+             xmlns:converters="clr-namespace:HomeBudget.Client.View.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Name="TileControl">
+    <UserControl.Resources>
+        <converters:IntToColorConverterForTile x:Key="IntToColor"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid>
+            <Rectangle StrokeThickness="2" Stroke="Transparent" Fill="{Binding ElementName=TileControl, Converter={StaticResource IntToColor}, Path=TileBackgroundColor}"/>
+            <TextBlock Height="50" FontSize="25" Foreground="Black" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                       Text="{Binding ElementName=TileControl, Path=TileText}" ></TextBlock>
+        </Grid>
+    </Grid>
+</UserControl>

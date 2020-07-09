@@ -1,0 +1,45 @@
+﻿<ContentControl x:Class="HomeBudget.Client.View.Pages.Home"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:HomeBudget.Client.View.Controls"
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      mc:Ignorable="d" 
+      d:DesignHeight="550" d:DesignWidth="800"
+      >
+
+    <Grid>
+        <!--<Image Source="/HomeBudget.Client;component/Resources/office-620822_1920.jpg" Stretch="UniformToFill" />-->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+         
+                <local:RotatingEllipse IconFace="{StaticResource appbar_home}" FaceText="{Binding CommonMoney}" ReverseText="Wydatki"  Width="200" Height="200">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseDown">
+                            <i:InvokeCommandAction Command="{Binding SwitchPage}" CommandParameter="Outgoes"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </local:RotatingEllipse>
+      
+
+            
+                <local:RotatingEllipse Grid.Column="1" FaceText="ala ma kota" Width="200" Height="200"/>
+           
+
+        </Grid>
+    </Grid>
+
+
+
+
+</ContentControl>

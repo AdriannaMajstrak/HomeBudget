@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="77cd24b3fa8143b1a6ca8e95ca4c4447" Name="Diagram1">
+        <EntityTypeShape EntityType="BudgetModel.Account" Width="1.5" PointX="3" PointY="11.875" />
+        <EntityTypeShape EntityType="BudgetModel.AccountGroup" Width="1.5" PointX="0.75" PointY="10.625" />
+        <EntityTypeShape EntityType="BudgetModel.CheckPoint" Width="1.5" PointX="3" PointY="3.875" />
+        <EntityTypeShape EntityType="BudgetModel.CheckPointEntry" Width="1.5" PointX="5.25" PointY="3.875" />
+        <EntityTypeShape EntityType="BudgetModel.Counter" Width="1.5" PointX="5.25" PointY="8.25" />
+        <EntityTypeShape EntityType="BudgetModel.CounterTemplate" Width="1.5" PointX="3" PointY="23" />
+        <EntityTypeShape EntityType="BudgetModel.CyclePayment" Width="1.5" PointX="8.25" PointY="8.625" />
+        <EntityTypeShape EntityType="BudgetModel.CyclePaymentTemplate" Width="1.5" PointX="3" PointY="26.125" />
+        <EntityTypeShape EntityType="BudgetModel.SettlementPeriod" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="BudgetModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BudgetModel.Transaction" Width="1.5" PointX="3" PointY="7.25" />
+        <AssociationConnector Association="BudgetModel.FK_Account_AccountGroup" />
+        <AssociationConnector Association="BudgetModel.FK_Bill_AccountGroup" />
+        <AssociationConnector Association="BudgetModel.FK_BillTemplate_AccountGroup" />
+        <AssociationConnector Association="BudgetModel.FK_Counter_AccountGroup" />
+        <AssociationConnector Association="BudgetModel.FK_CounterTemplate_AccountGrop" />
+        <AssociationConnector Association="BudgetModel.FK_Transaction_AccountGroup" />
+        <AssociationConnector Association="BudgetModel.FK_CheckPoint_SettlementPeriod" />
+        <AssociationConnector Association="BudgetModel.FK_CheckPointEntry_CheckPoint" />
+        <AssociationConnector Association="BudgetModel.FK_Counter_SettlementPeriod" />
+        <AssociationConnector Association="BudgetModel.FK_Counter_Transactions" />
+        <AssociationConnector Association="BudgetModel.FK_Counter_Transactions2" />
+        <AssociationConnector Association="BudgetModel.FK_Bill_SettlementPeriod" />
+        <AssociationConnector Association="BudgetModel.FK_Bill_ToTable" />
+        <AssociationConnector Association="BudgetModel.FK_CyclePayment_ToTable" />
+        <AssociationConnector Association="BudgetModel.FK_Transaction_SettlementPeriod" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

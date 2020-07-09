@@ -1,0 +1,185 @@
+﻿<Controls:MetroWindow x:Class="HomeBudget.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HomeBudget.Client"
+        xmlns:vm="clr-namespace:HomeBudget.Client.ViewModel"
+        xmlns:v="clr-namespace:HomeBudget.Client.View.Pages"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        mc:Ignorable="d"
+        Title="{Binding Title}" Height="800" Width="800" WindowState="Maximized">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:HomeViewModel}">
+            <v:Home></v:Home>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:OutgoesViewModel}">
+            <v:OutgoesView></v:OutgoesView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:IncomeViewModel}">
+            <v:IncomeView></v:IncomeView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SavingsViewModel}">
+            <v:SavingsView></v:SavingsView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CyclePaymentsViewModel}">
+            <v:CyclePaymentsView></v:CyclePaymentsView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CounterViewModel}">
+            <v:CounterView></v:CounterView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:CheckPointViewModel}">
+            <v:CheckPointView></v:CheckPointView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettlementPeriodViewModel}">
+            <v:SettlementPeriodView></v:SettlementPeriodView>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Image Source="/HomeBudget.Client;component/Resources/office-620822_1920.jpg" Stretch="UniformToFill" />
+        <Grid Name="MainWindowGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="75"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Name="ScrollNav" VerticalScrollBarVisibility="Hidden" Height="{Binding ElementName=MainWindowGrid, Path=ActualHeight}">
+                <Grid Name="NavGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="95"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="75"/>
+                    <RowDefinition MinHeight="95"/>
+                    </Grid.RowDefinitions>
+
+                <Button Name="ButtonHb" Style="{StaticResource NavigationButton}"  Grid.Row="0" Click="OpenOrCloseGrid"  >
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconOcticons Grid.Column="0" Kind="ThreeBars" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center"> Menu</Label>
+                    </Grid>
+                </Button>
+
+                <Button Style="{StaticResource NavigationButton}"  Grid.Row="1" Command="{Binding SwitchPage}" CommandParameter="Home">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="Home" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Strona główna</Label>
+                    </Grid>
+                    
+                    <!--<StackPanel Orientation="Horizontal">
+                        <Grid Height="50" Width="50">
+                            <Rectangle>
+                                <Rectangle.Fill>
+                                    <VisualBrush Visual="{StaticResource appbar_home}" Stretch="Fill" />
+                                </Rectangle.Fill>
+                            </Rectangle>
+                        </Grid>
+                        <Label>Strona główna</Label>
+                    </StackPanel>-->
+
+                </Button>
+
+
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="2" Command="{Binding SwitchPage}" CommandParameter="Outgoes">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="Cart" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Wydatki</Label>
+                    </Grid>
+                </Button>
+
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="3" Command="{Binding SwitchPage}" CommandParameter="Income">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="Money" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Przychody</Label>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="4" Command="{Binding SwitchPage}" CommandParameter="Savings">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconMaterial Grid.Column="0" Kind="Bank" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Oszczędności</Label>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="5" Command="{Binding SwitchPage}" CommandParameter="CyclePayments">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="CalendarDollar" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Cykliczne wydatki (rachunki)</Label>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="6" Command="{Binding SwitchPage}" CommandParameter="Counter">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="Gauge50" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Liczniki</Label>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="7" Command="{Binding SwitchPage}" CommandParameter="CheckPoint">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconMaterial Grid.Column="0" Kind="CheckboxMarkedCircleOutline" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Check Point</Label>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource NavigationButton}" Grid.Row="8" Command="{Binding SwitchPage}" CommandParameter="SettlementPeriod">
+                    <Grid Width="{Binding ElementName=ButtonHb, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <iconPacks:PackIconModern Grid.Column="0" Kind="CalendarYear" Width="36" Height="30" />
+                        <Label Grid.Column="1" HorizontalAlignment="Center">Okresy rozliczeniowe</Label>
+                    </Grid>
+                </Button>
+
+            </Grid>
+            </ScrollViewer>
+            
+            <Controls:MetroContentControl Grid.Column="1" Content="{Binding CurrentPage}"></Controls:MetroContentControl>
+
+        </Grid>
+        <Button Style="{StaticResource NavigationButton}"  Name="BtnNavUp" Width="{Binding ElementName=ButtonHb, Path=ActualWidth}" Height="20" HorizontalAlignment="Left" 
+                VerticalAlignment="Top"  Click="BtnNavUpClick" Padding="0">
+            <iconPacks:PackIconMaterial Kind="ChevronUp" Width="76" Height="10"/>
+        </Button>
+
+        <Button Style="{StaticResource NavigationButton}"  Name="BtnNav" Width="{Binding ElementName=ButtonHb, Path=ActualWidth}" Height="20" HorizontalAlignment="Left" 
+                VerticalAlignment="Bottom"  Click="BtnNavDownClick" Padding="0">
+            <iconPacks:PackIconMaterial Kind="ChevronDown" Width="76" Height="10"/>
+        </Button>
+    </Grid>
+</Controls:MetroWindow>
